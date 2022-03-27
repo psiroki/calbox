@@ -1,0 +1,35 @@
+{
+  "short_name": "Calbox",
+  "name": "Calculate Box",
+  "icons": [
+    {
+      "src": "icon-192m.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512m.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/calbox/?source=pwa",
+  "background_color": "#fff",
+  "display": "standalone",
+  "scope": "/calbox/",
+  "theme_color": "#fff"
+}
