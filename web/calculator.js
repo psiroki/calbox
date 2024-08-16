@@ -278,7 +278,7 @@ const /** Array<!_KindDefinition> */ _tokenDefinitions = [
     },
     (token) => {
       const result = new _Opcode(token.kind);
-      result.value = parseInt(token.value, 10)
+      result.value = +token.value;
       return result;
     }
   ),
@@ -557,6 +557,10 @@ class Program {
   }
 }
 
+function newProgram(source) {
+  return new Program(source);
+}
+
 const context = newCalculationContext();
 
 const results = document.querySelector("#results");
@@ -582,7 +586,7 @@ inputLine.addEventListener("keydown", e => {
     const expression = e.currentTarget.value;
     const d = div(expression);
     d.classList.add("q");
-    const prog = new Program(expression);
+    const prog = newProgram(expression);
     console.log(prog.toString());
     const result = prog.execute(context);
     context.setRegister("last", result);
