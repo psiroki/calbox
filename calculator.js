@@ -1,9 +1,36 @@
-class g{constructor(a){this.message=a}toString(){return this.message}}class h extends g{constructor(a,b){super(a);this.offset=b}}function k(a){return a.g.pop()||null}function l(a,b){a.g.push(b.bind(a))}class m{constructor(){this.g=[]}}class n extends m{constructor(){super();this.l=new Map}}class p{get value(){}set value(a){}bind(){}}
-class q extends p{constructor(a,b){super();this.name=a;this.g=b}get value(){return this.g.l.get(this.name)??0}set value(a){this.g.l.set(this.name,a)}bind(){return new q(this.name,this.g)}}class r extends p{constructor(a){super();this.g=a}get value(){return this.g}set value(a){throw new g("You can't set a value to a literal");}bind(){return this}}function t(a,b){if(a.h)return a.h(b);a=new u(b.g);a.value=b.value;return a}class v{constructor(a,b,d,c){this.g=a;this.i=b;this.m=d;this.h=c}}
-const w=new Map([new v("add","+",(a,b)=>{l(b,new r(k(b).value+k(b).value))}),new v("subtract","-",(a,b)=>{l(b,new r(-k(b).value+k(b).value))}),new v("multiply","*",(a,b)=>{l(b,new r(k(b).value*k(b).value))}),new v("divide","/",(a,b)=>{a=k(b).value;const d=k(b).value;l(b,new r(d/a))}),new v("power","**",(a,b)=>{a=k(b).value;const d=k(b).value;l(b,new r(d**a))}),new v("number",null,(a,b)=>{l(b,new r(a.value))},a=>{const b=new u(a.g);b.value=+a.value;return b}),new v("identifier",null,(a,b)=>{l(b,new q(a.value,
-b))}),new v("assign","=",(a,b)=>{a=k(b).value;k(b).value=a;l(b,new r(a))}),new v("openBracket","("),new v("closeBracket",")")].map(a=>[a.g,a])),x=Array.from(w.values()).filter(a=>null!=a.i).reduce((a,b)=>{const d=b.i[0];let c=a.get(d);c||a.set(d,c=[]);c.push(b);return a},new Map);class y{constructor(a){this.h=a}get g(){return this.h}}class z extends y{constructor(a){super(a);this.value=null}toString(){return`${this.h.toString()}(${this.value||""})`}}
-class u extends y{constructor(a){super(a);this.value=null}toString(){return`${this.h.toString()}${null!==this.value?" ":""}${this.value??""}`}}const A=new Map([["number",/(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/y],["identifier",/[_a-zA-Z][_a-zA-Z0-9]*/y]]);
-function*C(a){const b=a.length;for(let e=0;e<b;++e){var d=a[e];if(" "!==d){d=x.get(d);if(d){var c=null;for(let f of d)f.i&&a.startsWith(f.i,e)&&(!c||c.i.length<f.i.length)&&(c=f);d=c}else d=null;if(d)yield new z(d.g),e+=d.i.length-1;else{d=!1;for(let f of A.keys())if(c=A.get(f),c.lastIndex=e,c=c.exec(a)){d=!0;c=c[0];const B=new z(f);B.value=c;yield B;e+=c.length-1;break}if(!d)throw new h(`Found a strange character in the source at ${e}: ${a[e]}`,e);}}}}
-function D(a,b,d,c,e){if(a.g)c=D(a.g,b,d,c);else{var f=d[c];if("openBracket"===f.g){if(c=D(E,b,d,c+1),"closeBracket"!=d[c].g)throw new h("Ouch, no closing bracket");}else"identifier"!==f.g&&("subtract"===f.g&&++c,f.value=`${"subtract"==f.g?"-":""}${d[c].value}`),b.push(t(w.get(f.h),f));c+=1}e&&(f=b.push,e=t(w.get(e.h),e),f.call(b,e));c<d.length?a.h.has(d[c].g)?(e=d[c],a=D(a,b,d,c+1,e)):a=c:a=c;return a}function F(a,b){return new G(b,a)}class G{constructor(a,b){this.g=b||null;this.h=new Set(a)}}
-const E=F(F(F(new G(["power"]),["multiply","divide"]),["add","subtract"]),["assign"]);class H{constructor(a){this.j="string"===typeof a?[]:Array.from(a);if("string"===typeof a){var b=this.j;a=Array.from(C(a));D(E,b,a,0)}}toString(){return this.j.join("\n")}}const I=new n,J=document.querySelector("#results");function K(a){const b=document.createRange();b.selectNodeContents(a.currentTarget);a=window.getSelection();a.removeAllRanges();a.addRange(b)}
-function L(a){const b=document.createElement("div");b.textContent=String(a);b.addEventListener("click",K);return b}document.querySelector("#inputLine").addEventListener("keydown",a=>{if("Enter"===a.key){var b=a.currentTarget.value;const e=L(b);e.classList.add("q");var d=new H(b);console.log(d.toString());b=I||new n;for(c of d.j)d=c,w.get(d.h).m(d,b);var c=k(b).value;I.l.set("last",c);c=L(c);c.classList.add("a");J.append(e,c);a.currentTarget.select()}});
+
+const context = CalculateCore.newContext();
+
+const results = document.querySelector("#results");
+const inputLine = document.querySelector("#inputLine");
+
+function selectTargetContents(event) {
+  const r = document.createRange();
+  r.selectNodeContents(event.currentTarget);
+  const s = window.getSelection();
+  s.removeAllRanges();
+  s.addRange(r);
+}
+
+function div(text) {
+  const result = document.createElement("div");
+  result.textContent = String(text);
+  result.addEventListener("click", selectTargetContents);
+  return result;
+}
+
+inputLine.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const expression = e.currentTarget.value;
+    const d = div(expression);
+    d.classList.add("q");
+    const prog = CalculateCore.newProgram(expression);
+    console.log(prog.toString());
+    const result = prog.execute(context);
+    context.setRegister("last", result);
+    const r = div(result);
+    r.classList.add("a");
+    results.append(d, r);
+    e.currentTarget.select();
+  }
+});
